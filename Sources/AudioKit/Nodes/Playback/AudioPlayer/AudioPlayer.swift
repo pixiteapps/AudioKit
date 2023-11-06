@@ -198,8 +198,9 @@ public class AudioPlayer: Node {
 
     func internalCompletionHandler() {
         guard status == .playing,
-              !isSeeking,
-              engine?.isInManualRenderingMode == false else { return }
+              !isSeeking//,
+              //engine?.isInManualRenderingMode == false
+        else { return }
 
         completionHandler?()
 

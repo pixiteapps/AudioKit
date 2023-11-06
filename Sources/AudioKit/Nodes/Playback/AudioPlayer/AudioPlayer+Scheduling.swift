@@ -51,6 +51,7 @@ extension AudioPlayer {
         }
 
         let frameCount = AVAudioFrameCount(totalFrames)
+        let isRendering = self.engine?.isInManualRenderingMode == true
 
         playerNode.scheduleSegment(file,
                                    startingFrame: startFrame,
@@ -58,7 +59,7 @@ extension AudioPlayer {
                                    at: audioTime,
                                    completionCallbackType: completionCallbackType) { _ in
             if self.isSeeking { return }
-            if Thread.isMainThread {
+            if Thread.isMainThread || isRendering {
                 self.internalCompletionHandler()
             } else {
                 DispatchQueue.main.async {
@@ -91,12 +92,13 @@ extension AudioPlayer {
             bufferOptions = [.loops, .interrupts]
         }
 
+        let isRendering = self.engine?.isInManualRenderingMode == true
         playerNode.scheduleBuffer(buffer,
                                   at: audioTime,
                                   options: bufferOptions,
                                   completionCallbackType: completionCallbackType) { _ in
             if self.isSeeking { return }
-            if Thread.isMainThread {
+            if Thread.isMainThread || isRendering {
                 self.internalCompletionHandler()
             } else {
                 DispatchQueue.main.async {

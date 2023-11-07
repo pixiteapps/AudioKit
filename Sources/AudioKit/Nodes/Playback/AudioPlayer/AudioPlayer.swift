@@ -198,8 +198,7 @@ public class AudioPlayer: Node {
 
     func internalCompletionHandler() {
         guard status == .playing,
-              !isSeeking//,
-              //engine?.isInManualRenderingMode == false
+              !isSeeking
         else { return }
 
         completionHandler?()
@@ -208,7 +207,7 @@ public class AudioPlayer: Node {
             status = .stopped
             play()
         } else {
-            status = .stopped
+            stop()
         }
     }
 
